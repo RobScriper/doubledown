@@ -3,6 +3,69 @@ local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local mouse = player:GetMouse()
 
+-- Создание кей-меню
+local keyMenu = Instance.new("ScreenGui")
+keyMenu.Parent = playerGui
+
+-- Фон для кей-меню
+local keyFrame = Instance.new("Frame")
+keyFrame.Size = UDim2.new(0, 400, 0, 200)
+keyFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
+keyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+keyFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+keyFrame.Parent = keyMenu
+
+local keyCorner = Instance.new("UICorner")
+keyCorner.CornerRadius = UDim.new(0, 20)
+keyCorner.Parent = keyFrame
+
+-- Текстовый бокс для ввода ключа
+local keyBox = Instance.new("TextBox")
+keyBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+keyBox.Position = UDim2.new(0.1, 0, 0.2, 0)
+keyBox.PlaceholderText = "Enter Key"
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextSize = 18
+keyBox.Parent = keyFrame
+
+local keyBoxCorner = Instance.new("UICorner")
+keyBoxCorner.CornerRadius = UDim.new(0, 10)
+keyBoxCorner.Parent = keyBox
+
+-- Кнопка отправки ключа
+local sendKeyButton = Instance.new("TextButton")
+sendKeyButton.Size = UDim2.new(0.5, 0, 0.2, 0)
+sendKeyButton.Position = UDim2.new(0.25, 0, 0.6, 0)
+sendKeyButton.Text = "Send Key"
+sendKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+sendKeyButton.BackgroundColor3 = Color3.fromRGB(0, 128, 255)
+sendKeyButton.Font = Enum.Font.GothamBold
+sendKeyButton.TextSize = 16
+sendKeyButton.Parent = keyFrame
+
+local sendKeyCorner = Instance.new("UICorner")
+sendKeyCorner.CornerRadius = UDim.new(0, 10)
+sendKeyCorner.Parent = sendKeyButton
+
+-- Логика для проверки ключа
+local correctKey = "S111"
+
+sendKeyButton.MouseButton1Click:Connect(function()
+    if keyBox.Text == correctKey then
+        keyMenu:Destroy() -- Удаление кей-меню
+        screenGui.Enabled = true -- Включение основного меню
+    else
+        keyBox.Text = ""
+        keyBox.PlaceholderText = "Invalid Key. Try Again!"
+    end
+end)
+
+-- Изменить основное меню для начала с выключенного состояния
+screenGui.Enabled = false
+
+
 -- Создание GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = playerGui
