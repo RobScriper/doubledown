@@ -84,7 +84,7 @@ getKeyCorner.CornerRadius = UDim.new(0, 10)
 getKeyCorner.Parent = getKeyButton
 
 -- Логика для кнопок
-local correctKey = "S111"
+local correctKey = "GUB300"
 local link = "https://funpay.com/uk/lots/offerEdit?node=402&offer=37609264"
 
 sendKeyButton.MouseButton1Click:Connect(function()
@@ -185,7 +185,7 @@ playerName.Parent = avatarFrame
 local creditsText = Instance.new("TextLabel")
 creditsText.Size = UDim2.new(0.7, 0, 0.5, 0)
 creditsText.Position = UDim2.new(0.25, 0, 0.4, 0)
-creditsText.Text = "by exp"
+creditsText.Text = "by RobScriper"
 creditsText.TextColor3 = Color3.fromRGB(200, 200, 200)
 creditsText.Font = Enum.Font.Gotham
 creditsText.TextSize = 12
