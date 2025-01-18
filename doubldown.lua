@@ -290,12 +290,20 @@ local function startAutoFarm()
 			local nearestPlayer = getNearestPlayer()
 
 			if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
-				-- Ждём 2 секунды перед телепортацией
+				-- Ждем 2 секунды перед телепортацией
 				wait(2)
 
 				-- Телепортируем персонажа к ближайшему игроку
 				local targetHRP = nearestPlayer.Character.HumanoidRootPart
 				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 3, 3.5))
+
+				-- Проверяем, не умер ли игрок
+				local humanoid = nearestPlayer.Character:FindFirstChild("Humanoid")
+				if humanoid and humanoid.Health <= 0 then
+					-- Игрок умер, больше не телепортируемся
+					stopAutoFarm()
+					return
+				end
 
 				-- Можно сразу активировать инструмент
 				tool:Activate()
@@ -334,6 +342,7 @@ autoFarmButton.MouseButton1Click:Connect(function()
 		startAutoFarm()
 	end
 end)
+
 
 
 
