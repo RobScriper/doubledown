@@ -258,77 +258,97 @@ local autoFarmCorner = Instance.new("UICorner")
 autoFarmCorner.CornerRadius = UDim.new(0, 15)
 autoFarmCorner.Parent = autoFarmButton
 
--- Логика автофарма
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
+local walkSpeed = 24  -- Установим скорость на 24
+local healthRegenAmount = 100  -- Каждую миллисекунду прибавляем 100 здоровья
 
 local function getNearestPlayer()
-	local nearestPlayer = nil
-	local shortestDistance = math.huge
+    local nearestPlayer = nil
+    local shortestDistance = math.huge
 
-	for _, otherPlayer in pairs(game.Players:GetPlayers()) do
-		if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-			local distance = (player.Character.HumanoidRootPart.Position - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
-			if distance < shortestDistance then
-				shortestDistance = distance
-				nearestPlayer = otherPlayer
-			end
-		end
-	end
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local distance = (player.Character.HumanoidRootPart.Position - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance < shortestDistance then
+                shortestDistance = distance
+                nearestPlayer = otherPlayer
+            end
+        end
+    end
 
-	return nearestPlayer
+    return nearestPlayer
 end
 
 local function startAutoFarm()
-	autoFarmActive = true
-	autoFarmButton.Text = "Disable AutoFarm"
-	autoFarmButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    autoFarmActive = true
+    autoFarmButton.Text = "Disable AutoFarm"
+    autoFarmButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
-	autoFarmConnection = game:GetService("RunService").RenderStepped:Connect(function()
-		if autoFarmActive then
-			local tool = player.Backpack:FindFirstChildOfClass("Tool") or player.Character:FindFirstChildOfClass("Tool")
-			local nearestPlayer = getNearestPlayer()
+    autoFarmConnection = game:GetService("RunService").RenderStepped:Connect(function()
+        if autoFarmActive then
+            local tool = player.Backpack:FindFirstChildOfClass("Tool") or player.Character:FindFirstChildOfClass("Tool")
+            local nearestPlayer = getNearestPlayer()
 
-			if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
-				local targetHRP = nearestPlayer.Character.HumanoidRootPart
-				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 0, 2))
-				tool:Activate()
-			end
-		end
-	end)
+            if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local targetHRP = nearestPlayer.Character.HumanoidRootPart
+                local targetHead = nearestPlayer.Character.Head
 
-	healthRegenerationConnection = game:GetService("RunService").RenderStepped:Connect(function()
-		if player.Character and player.Character:FindFirstChild("Humanoid") then
-			local humanoid = player.Character.Humanoid
-			humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + 100 * game:GetService("RunService").RenderStepped:Wait())
-		end
-	end)
+                -- Поворачиваем камеру к ближайшему игроку
+                local camera = game.Workspace.CurrentCamera
+                camera.CFrame = CFrame.new(camera.CFrame.Position, targetHead.Position)
+
+                -- Получаем направление от текущей позиции к ближайшему игроку
+                local direction = (targetHRP.Position - player.Character.HumanoidRootPart.Position).unit
+
+                -- Делаем движение как при зажатой клавише W (двигаем вперед)
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:Move(Vector3.new(direction.X, 0, direction.Z) * walkSpeed)
+                end
+
+                tool:Activate()  -- Используем инструмент
+            end
+        end
+    end)
+
+    -- Регистрация здоровья каждую миллисекунду
+    healthRegenerationConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            local humanoid = player.Character.Humanoid
+            -- Прибавляем 100 хп каждую миллисекунду (каждый кадр)
+            humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + healthRegenAmount * game:GetService("RunService").Heartbeat:Wait())
+        end
+    end)
 end
 
 local function stopAutoFarm()
-	autoFarmActive = false
-	autoFarmButton.Text = "Enable AutoFarm"
-	autoFarmButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    autoFarmActive = false
+    autoFarmButton.Text = "Enable AutoFarm"
+    autoFarmButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 
-	if autoFarmConnection then
-		autoFarmConnection:Disconnect()
-		autoFarmConnection = nil
-	end
+    if autoFarmConnection then
+        autoFarmConnection:Disconnect()
+        autoFarmConnection = nil
+    end
 
-	if healthRegenerationConnection then
-		healthRegenerationConnection:Disconnect()
-		healthRegenerationConnection = nil
-	end
+    if healthRegenerationConnection then
+        healthRegenerationConnection:Disconnect()
+        healthRegenerationConnection = nil
+    end
 end
 
 autoFarmButton.MouseButton1Click:Connect(function()
-	if autoFarmActive then
-		stopAutoFarm()
-	else
-		startAutoFarm()
-	end
+    if autoFarmActive then
+        stopAutoFarm()
+    else
+        startAutoFarm()
+    end
 end)
+
+
+
 
 
 
