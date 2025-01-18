@@ -117,7 +117,7 @@ welcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 welcomeLabel.Parent = mainFrame
 
 -- Логика отправки ключа
-local correctKey = "GUB300"
+local correctKey = "SSD2025"
 
 sendKeyButton.MouseButton1Click:Connect(function()
     if keyBox.Text == correctKey then
