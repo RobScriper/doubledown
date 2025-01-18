@@ -75,7 +75,7 @@ getKeyButton.Size = UDim2.new(0.35, 0, 0.2, 0)
 getKeyButton.Position = UDim2.new(0.55, 0, 0.65, 0)
 getKeyButton.Text = "Get Key"
 getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-getKeyButton.BackgroundColor3 = Color3.fromRGB(50, 205, 50)
+getKeyButton.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
 getKeyButton.Font = Enum.Font.GothamBold
 getKeyButton.TextSize = 18
 getKeyButton.Parent = keyFrame
@@ -84,46 +84,78 @@ local getKeyCorner = Instance.new("UICorner")
 getKeyCorner.CornerRadius = UDim.new(0, 10)
 getKeyCorner.Parent = getKeyButton
 
--- Логика кнопок
+-- Главное меню
+local mainMenu = Instance.new("ScreenGui")
+mainMenu.Name = "MainMenu"
+mainMenu.Parent = playerGui
+mainMenu.Enabled = false
+
+-- Главный фрейм
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 600, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+mainFrame.BackgroundTransparency = 0.1
+mainFrame.BorderSizePixel = 0
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+mainFrame.Parent = mainMenu
+
+-- Закругление углов
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 20)
+mainCorner.Parent = mainFrame
+
+local welcomeLabel = Instance.new("TextLabel")
+welcomeLabel.Name = "WelcomeLabel"
+welcomeLabel.Size = UDim2.new(1, 0, 0.2, 0)
+welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
+welcomeLabel.BackgroundTransparency = 1
+welcomeLabel.Text = "Welcome to the Main Menu!"
+welcomeLabel.Font = Enum.Font.GothamBold
+welcomeLabel.TextSize = 24
+welcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+welcomeLabel.Parent = mainFrame
+
+-- Логика отправки ключа
 local correctKey = "GUB300"
-local link = "https://funpay.com/uk/lots/offer?id=37609264"
 
 sendKeyButton.MouseButton1Click:Connect(function()
-	if keyBox.Text == correctKey then
-		keyFrame.Visible = false
-		print("Access Granted!")
-
-		-- Добавление главного меню
-		local mainFrame = Instance.new("Frame")
-		mainFrame.Name = "MainFrame"
-		mainFrame.Size = UDim2.new(0.8, 0, 0.8, 0)
-		mainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
-		mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-		mainFrame.BorderSizePixel = 0
-		mainFrame.Parent = playerGui
-
-		local mainCorner = Instance.new("UICorner")
-		mainCorner.CornerRadius = UDim.new(0, 15)
-		mainCorner.Parent = mainFrame
-
-		-- Показываем главное меню
-		mainFrame.Visible = true
-	else
-		keyBox.Text = ""
-		keyBox.PlaceholderText = "Invalid Key. Try Again!"
-	end
+    if keyBox.Text == correctKey then
+        keyMenu.Enabled = false
+        mainMenu.Enabled = true
+        print("Access Granted!")
+    else
+        keyBox.Text = ""
+        keyBox.PlaceholderText = "Invalid Key. Try Again!"
+    end
 end)
 
+-- Копирование ссылки в буфер обмена и показ "Copied"
 getKeyButton.MouseButton1Click:Connect(function()
-	-- Копирование ссылки в буфер обмена
-	setclipboard(link)
-	getKeyButton.Text = "Copied!"
-	task.wait(1.5)
-	getKeyButton.Text = "Get Key"
+    local copyText = "https://funpay.com/uk/lots/offer?id=37609264"
+    
+    -- Копирование текста в буфер обмена (имитация)
+    setclipboard(copyText)
+    
+    -- Показать сообщение "Copied"
+    local copiedLabel = Instance.new("TextLabel")
+    copiedLabel.Size = UDim2.new(1, 0, 0.2, 0)
+    copiedLabel.Position = UDim2.new(0, 0, 0.9, 0)
+    copiedLabel.BackgroundTransparency = 1
+    copiedLabel.Text = "Copied"
+    copiedLabel.Font = Enum.Font.GothamBold
+    copiedLabel.TextSize = 24
+    copiedLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+    copiedLabel.TextYAlignment = Enum.TextYAlignment.Center
+    copiedLabel.Parent = keyFrame
+
+    -- Через 1.5 секунды скрыть сообщение
+    wait(1.5)
+    copiedLabel:Destroy()
+
+    print("Link copied to clipboard: " .. copyText)
 end)
 
--- Стартовое состояние
-keyFrame.Visible = true
 
 
 
