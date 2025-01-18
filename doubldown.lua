@@ -85,7 +85,7 @@ getKeyCorner.Parent = getKeyButton
 
 -- Логика для кнопок
 local correctKey = "GUB300"
-local link = "https://funpay.com/uk/lots/offerEdit?node=402&offer=37609264"
+local link = "https://funpay.com/uk/lots/offer?id=37609264"
 
 sendKeyButton.MouseButton1Click:Connect(function()
 	if keyBox.Text == correctKey then
