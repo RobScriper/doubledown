@@ -91,8 +91,23 @@ local link = "https://funpay.com/uk/lots/offer?id=37609264"
 sendKeyButton.MouseButton1Click:Connect(function()
 	if keyBox.Text == correctKey then
 		keyFrame.Visible = false
-		-- Добавьте здесь переход к главному GUI
 		print("Access Granted!")
+
+		-- Добавление главного меню
+		local mainFrame = Instance.new("Frame")
+		mainFrame.Name = "MainFrame"
+		mainFrame.Size = UDim2.new(0.8, 0, 0.8, 0)
+		mainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
+		mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+		mainFrame.BorderSizePixel = 0
+		mainFrame.Parent = playerGui
+
+		local mainCorner = Instance.new("UICorner")
+		mainCorner.CornerRadius = UDim.new(0, 15)
+		mainCorner.Parent = mainFrame
+
+		-- Показываем главное меню
+		mainFrame.Visible = true
 	else
 		keyBox.Text = ""
 		keyBox.PlaceholderText = "Invalid Key. Try Again!"
