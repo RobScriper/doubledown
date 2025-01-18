@@ -258,7 +258,6 @@ local autoFarmCorner = Instance.new("UICorner")
 autoFarmCorner.CornerRadius = UDim.new(0, 15)
 autoFarmCorner.Parent = autoFarmButton
 
--- Логика автофарма
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
@@ -293,6 +292,8 @@ local function startAutoFarm()
 			if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
 				local targetHRP = nearestPlayer.Character.HumanoidRootPart
 				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 3, 3.5))
+				-- Добавляем задержку перед активацией инструмента
+				wait(2) -- 2 секунды задержки
 				tool:Activate()
 			end
 		end
@@ -329,6 +330,7 @@ autoFarmButton.MouseButton1Click:Connect(function()
 		startAutoFarm()
 	end
 end)
+
 
 -- Логика отображения разделов
 swordFightButton.MouseButton1Click:Connect(function()
