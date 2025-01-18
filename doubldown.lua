@@ -93,7 +93,7 @@ mainMenu.Enabled = false
 -- Главный фрейм
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, 600, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+mainFrame.Position = UDim2.new(0.6, -200, 0.6, -100)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.BackgroundTransparency = 0.1
 mainFrame.BorderSizePixel = 0
