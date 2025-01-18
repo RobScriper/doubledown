@@ -254,11 +254,11 @@ autoFarmButton.TextSize = 16
 autoFarmButton.Visible = true
 autoFarmButton.Parent = mainFrame
 
+
+-- Логика автофарма
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
-local lastTeleportedTime = 0  -- Время последнего телепорта
-local cooldownTime = 5  -- Время, через которое можно снова телепортироваться (в секундах)
 
 local function getNearestPlayer()
 	local nearestPlayer = nil
@@ -288,46 +288,8 @@ local function startAutoFarm()
 			local nearestPlayer = getNearestPlayer()
 
 			if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
-				-- Ждем 2 секунды перед телепортацией
-				wait(2)
-
-				-- Проверяем, сколько времени прошло с последнего телепорта
-				local currentTime = tick()  -- Текущее время
-				if currentTime - lastTeleportedTime < cooldownTime then
-					-- Если прошло меньше 5 секунд, пропускаем телепортацию
-					return
-				end
-
-				-- Телепортируем персонажа к ближайшему игроку
 				local targetHRP = nearestPlayer.Character.HumanoidRootPart
-				local targetPosition = targetHRP.Position + Vector3.new(0, 3, 3.5)  -- Смещаем точку для телепортации
-
-				-- Обновляем время последнего телепорта
-				lastTeleportedTime = currentTime
-
-				-- Начинаем следовать за игроком
-				local humanoid = player.Character:FindFirstChild("Humanoid")
-				if humanoid then
-					while autoFarmActive and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") do
-						-- Каждый кадр, двигаем игрока к целевому игроку
-						local targetHRP = nearestPlayer.Character.HumanoidRootPart
-						local direction = (targetHRP.Position - player.Character.HumanoidRootPart.Position).unit
-						local moveDistance = 0.5  -- Расстояние перемещения за кадр
-
-						-- Перемещаем игрока в направлении ближайшего игрока
-						player.Character:MoveTo(player.Character.HumanoidRootPart.Position + direction * moveDistance)
-
-						-- Если мы достаточно близки к целевому игроку, выходим из цикла
-						if (player.Character.HumanoidRootPart.Position - targetHRP.Position).Magnitude < 3 then
-							break
-						end
-
-						-- Пауза, чтобы не вызывать бесконечный цикл
-						wait(0.1)
-					end
-				end
-
-				-- После достижения цели активируем инструмент
+				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 3, 3.5))
 				tool:Activate()
 			end
 		end
