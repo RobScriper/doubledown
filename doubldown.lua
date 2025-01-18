@@ -68,8 +68,23 @@ local sendKeyCorner = Instance.new("UICorner")
 sendKeyCorner.CornerRadius = UDim.new(0, 10)
 sendKeyCorner.Parent = sendKeyButton
 
--- Логика для проверки ключа
-local correctKey = "GUB300"
+-- Кнопка для получения ключа
+local getKeyButton = Instance.new("TextButton")
+getKeyButton.Size = UDim2.new(0.5, 0, 0.2, 0)
+getKeyButton.Position = UDim2.new(0.25, 0, 0.8, 0) -- Под кнопкой "Send Key"
+getKeyButton.Text = "Get Key"
+getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+getKeyButton.BackgroundColor3 = Color3.fromRGB(50, 205, 50)
+getKeyButton.Font = Enum.Font.GothamBold
+getKeyButton.TextSize = 16
+getKeyButton.Parent = keyFrame
+
+local getKeyCorner = Instance.new("UICorner")
+getKeyCorner.CornerRadius = UDim.new(0, 10)
+getKeyCorner.Parent = getKeyButton
+
+-- Логика для кнопок
+local correctKey = "S111"
 
 sendKeyButton.MouseButton1Click:Connect(function()
 	if keyBox.Text == correctKey then
@@ -81,8 +96,14 @@ sendKeyButton.MouseButton1Click:Connect(function()
 	end
 end)
 
+getKeyButton.MouseButton1Click:Connect(function()
+	-- Открыть ссылку в браузере
+	game:GetService("GuiService"):OpenBrowserWindow("https://funpay.com/uk/lots/offerEdit?node=402&offer=37609264")
+end)
+
 -- Начальное состояние
 keyFrame.Visible = true
+
 
 -- Левая панель
 local leftPanel = Instance.new("Frame")
