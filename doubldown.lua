@@ -85,6 +85,7 @@ getKeyCorner.Parent = getKeyButton
 
 -- Логика для кнопок
 local correctKey = "S111"
+local link = "https://funpay.com/uk/lots/offerEdit?node=402&offer=37609264"
 
 sendKeyButton.MouseButton1Click:Connect(function()
 	if keyBox.Text == correctKey then
@@ -97,8 +98,13 @@ sendKeyButton.MouseButton1Click:Connect(function()
 end)
 
 getKeyButton.MouseButton1Click:Connect(function()
-	-- Открыть ссылку в браузере
-	game:GetService("GuiService"):OpenBrowserWindow("https://funpay.com/uk/lots/offerEdit?node=402&offer=37609264")
+	-- Копирование ссылки в буфер обмена
+	setclipboard(link)
+	-- Изменение текста кнопки на "Скопировано"
+	getKeyButton.Text = "Copied!"
+	-- Таймер для возврата текста кнопки обратно на "Get Key"
+	task.wait(1.5)
+	getKeyButton.Text = "Get Key"
 end)
 
 -- Начальное состояние
