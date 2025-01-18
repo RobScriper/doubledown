@@ -1,7 +1,26 @@
 -- Локальные переменные
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local mouse = player:GetMouse()
+
+-- Создание GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = playerGui
+
+-- Главный фрейм
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 600, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+mainFrame.BackgroundTransparency = 0.1
+mainFrame.BorderSizePixel = 0
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+mainFrame.Visible = false -- Главный фрейм скрыт изначально
+mainFrame.Parent = screenGui
+
+-- Закругление углов
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 20)
+mainCorner.Parent = mainFrame
 
 -- Создание кей-меню
 local keyMenu = Instance.new("ScreenGui")
@@ -50,40 +69,20 @@ sendKeyCorner.CornerRadius = UDim.new(0, 10)
 sendKeyCorner.Parent = sendKeyButton
 
 -- Логика для проверки ключа
-local correctKey = "S111"
+local correctKey = "GUB300"
 
 sendKeyButton.MouseButton1Click:Connect(function()
-    if keyBox.Text == correctKey then
-        keyMenu:Destroy() -- Удаление кей-меню
-        screenGui.Enabled = true -- Включение основного меню
-    else
-        keyBox.Text = ""
-        keyBox.PlaceholderText = "Invalid Key. Try Again!"
-    end
+	if keyBox.Text == correctKey then
+		keyFrame.Visible = false -- Скрываем кей-фрейм
+		mainFrame.Visible = true -- Показываем главный фрейм
+	else
+		keyBox.Text = ""
+		keyBox.PlaceholderText = "Invalid Key. Try Again!"
+	end
 end)
 
--- Изменить основное меню для начала с выключенного состояния
-screenGui.Enabled = false
-
-
--- Создание GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = playerGui
-
--- Главный фрейм
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 600, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainFrame.BackgroundTransparency = 0.1
-mainFrame.BorderSizePixel = 0
-mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-mainFrame.Parent = screenGui
-
--- Закругление углов
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 20)
-mainCorner.Parent = mainFrame
+-- Начальное состояние
+keyFrame.Visible = true
 
 -- Левая панель
 local leftPanel = Instance.new("Frame")
@@ -190,81 +189,81 @@ local autoFarmConnection
 local healthRegenerationConnection
 
 local function getNearestPlayer()
-    local nearestPlayer = nil
-    local shortestDistance = math.huge
+	local nearestPlayer = nil
+	local shortestDistance = math.huge
 
-    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
-        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local distance = (player.Character.HumanoidRootPart.Position - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
-            if distance < shortestDistance then
-                shortestDistance = distance
-                nearestPlayer = otherPlayer
-            end
-        end
-    end
+	for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+		if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+			local distance = (player.Character.HumanoidRootPart.Position - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
+			if distance < shortestDistance then
+				shortestDistance = distance
+				nearestPlayer = otherPlayer
+			end
+		end
+	end
 
-    return nearestPlayer
+	return nearestPlayer
 end
 
 local function startAutoFarm()
-    autoFarmActive = true
-    autoFarmButton.Text = "Disable AutoFarm"
-    autoFarmButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+	autoFarmActive = true
+	autoFarmButton.Text = "Disable AutoFarm"
+	autoFarmButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
-    autoFarmConnection = game:GetService("RunService").RenderStepped:Connect(function()
-        if autoFarmActive then
-            local tool = player.Backpack:FindFirstChildOfClass("Tool") or player.Character:FindFirstChildOfClass("Tool")
-            local nearestPlayer = getNearestPlayer()
+	autoFarmConnection = game:GetService("RunService").RenderStepped:Connect(function()
+		if autoFarmActive then
+			local tool = player.Backpack:FindFirstChildOfClass("Tool") or player.Character:FindFirstChildOfClass("Tool")
+			local nearestPlayer = getNearestPlayer()
 
-            if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local targetHRP = nearestPlayer.Character.HumanoidRootPart
-                player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 0, 2))
-                tool:Activate()
-            end
-        end
-    end)
+			if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
+				local targetHRP = nearestPlayer.Character.HumanoidRootPart
+				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 0, 2))
+				tool:Activate()
+			end
+		end
+	end)
 
-    healthRegenerationConnection = game:GetService("RunService").RenderStepped:Connect(function()
-        if player.Character and player.Character:FindFirstChild("Humanoid") then
-            local humanoid = player.Character.Humanoid
-            humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + 100 * game:GetService("RunService").RenderStepped:Wait())
-        end
-    end)
+	healthRegenerationConnection = game:GetService("RunService").RenderStepped:Connect(function()
+		if player.Character and player.Character:FindFirstChild("Humanoid") then
+			local humanoid = player.Character.Humanoid
+			humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + 100 * game:GetService("RunService").RenderStepped:Wait())
+		end
+	end)
 end
 
 local function stopAutoFarm()
-    autoFarmActive = false
-    autoFarmButton.Text = "Enable AutoFarm"
-    autoFarmButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+	autoFarmActive = false
+	autoFarmButton.Text = "Enable AutoFarm"
+	autoFarmButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 
-    if autoFarmConnection then
-        autoFarmConnection:Disconnect()
-        autoFarmConnection = nil
-    end
+	if autoFarmConnection then
+		autoFarmConnection:Disconnect()
+		autoFarmConnection = nil
+	end
 
-    if healthRegenerationConnection then
-        healthRegenerationConnection:Disconnect()
-        healthRegenerationConnection = nil
-    end
+	if healthRegenerationConnection then
+		healthRegenerationConnection:Disconnect()
+		healthRegenerationConnection = nil
+	end
 end
 
 autoFarmButton.MouseButton1Click:Connect(function()
-    if autoFarmActive then
-        stopAutoFarm()
-    else
-        startAutoFarm()
-    end
+	if autoFarmActive then
+		stopAutoFarm()
+	else
+		startAutoFarm()
+	end
 end)
 
 -- Логика отображения разделов
 swordFightButton.MouseButton1Click:Connect(function()
-    autoFarmButton.Visible = true
-    creditsText.Visible = false
+	autoFarmButton.Visible = true
+	creditsText.Visible = false
 end)
 
 creditsButton.MouseButton1Click:Connect(function()
-    autoFarmButton.Visible = false
-    creditsText.Visible = true
+	autoFarmButton.Visible = false
+	creditsText.Visible = true
 end)
 
 -- Полоска для выхода из приложения
@@ -285,23 +284,23 @@ local dragStart = nil
 local startPos = nil
 
 exitBar.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        dragStart = input.Position
-        startPos = mainFrame.Position
-    end
+	if gameProcessed then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		isDragging = true
+		dragStart = input.Position
+		startPos = mainFrame.Position
+	end
 end)
 
 exitBar.InputChanged:Connect(function(input)
-    if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - dragStart
-        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
+	if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - dragStart
+		mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
 end)
 
 exitBar.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-    end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		isDragging = false
+	end
 end)
