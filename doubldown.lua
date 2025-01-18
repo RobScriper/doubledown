@@ -2,51 +2,50 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Создание GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = playerGui
-
--- Главный фрейм
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 600, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainFrame.BackgroundTransparency = 0.1
-mainFrame.BorderSizePixel = 0
-mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-mainFrame.Visible = false -- Главный фрейм скрыт изначально
-mainFrame.Parent = screenGui
-
--- Закругление углов
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 20)
-mainCorner.Parent = mainFrame
-
 -- Создание кей-меню
 local keyMenu = Instance.new("ScreenGui")
+keyMenu.Name = "KeyMenu"
 keyMenu.Parent = playerGui
 
--- Фон для кей-меню
+-- Фон кей-меню
 local keyFrame = Instance.new("Frame")
-keyFrame.Size = UDim2.new(0, 400, 0, 200)
-keyFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
-keyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+keyFrame.Name = "KeyFrame"
+keyFrame.Size = UDim2.new(0, 450, 0, 250)
+keyFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+keyFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+keyFrame.BorderSizePixel = 0
 keyFrame.Parent = keyMenu
 
 local keyCorner = Instance.new("UICorner")
 keyCorner.CornerRadius = UDim.new(0, 20)
 keyCorner.Parent = keyFrame
 
+-- Заголовок
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Name = "TitleLabel"
+titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "Enter Your Key"
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 24
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+titleLabel.Parent = keyFrame
+
 -- Текстовый бокс для ввода ключа
 local keyBox = Instance.new("TextBox")
-keyBox.Size = UDim2.new(0.8, 0, 0.3, 0)
-keyBox.Position = UDim2.new(0.1, 0, 0.2, 0)
-keyBox.PlaceholderText = "Enter Key"
+keyBox.Name = "KeyBox"
+keyBox.Size = UDim2.new(0.8, 0, 0.25, 0)
+keyBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+keyBox.PlaceholderText = "Enter Key Here"
+keyBox.Text = ""
 keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-keyBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+keyBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 keyBox.Font = Enum.Font.Gotham
 keyBox.TextSize = 18
+keyBox.ClearTextOnFocus = true
 keyBox.Parent = keyFrame
 
 local keyBoxCorner = Instance.new("UICorner")
@@ -55,42 +54,45 @@ keyBoxCorner.Parent = keyBox
 
 -- Кнопка отправки ключа
 local sendKeyButton = Instance.new("TextButton")
-sendKeyButton.Size = UDim2.new(0.5, 0, 0.2, 0)
-sendKeyButton.Position = UDim2.new(0.25, 0, 0.6, 0)
-sendKeyButton.Text = "Send Key"
+sendKeyButton.Name = "SendKeyButton"
+sendKeyButton.Size = UDim2.new(0.35, 0, 0.2, 0)
+sendKeyButton.Position = UDim2.new(0.1, 0, 0.65, 0)
+sendKeyButton.Text = "Submit Key"
 sendKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 sendKeyButton.BackgroundColor3 = Color3.fromRGB(0, 128, 255)
 sendKeyButton.Font = Enum.Font.GothamBold
-sendKeyButton.TextSize = 16
+sendKeyButton.TextSize = 18
 sendKeyButton.Parent = keyFrame
 
 local sendKeyCorner = Instance.new("UICorner")
 sendKeyCorner.CornerRadius = UDim.new(0, 10)
 sendKeyCorner.Parent = sendKeyButton
 
--- Кнопка для получения ключа
+-- Кнопка получения ключа
 local getKeyButton = Instance.new("TextButton")
-getKeyButton.Size = UDim2.new(0.5, 0, 0.2, 0)
-getKeyButton.Position = UDim2.new(0.25, 0, 0.8, 0) -- Под кнопкой "Send Key"
+getKeyButton.Name = "GetKeyButton"
+getKeyButton.Size = UDim2.new(0.35, 0, 0.2, 0)
+getKeyButton.Position = UDim2.new(0.55, 0, 0.65, 0)
 getKeyButton.Text = "Get Key"
 getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 getKeyButton.BackgroundColor3 = Color3.fromRGB(50, 205, 50)
 getKeyButton.Font = Enum.Font.GothamBold
-getKeyButton.TextSize = 16
+getKeyButton.TextSize = 18
 getKeyButton.Parent = keyFrame
 
 local getKeyCorner = Instance.new("UICorner")
 getKeyCorner.CornerRadius = UDim.new(0, 10)
 getKeyCorner.Parent = getKeyButton
 
--- Логика для кнопок
+-- Логика кнопок
 local correctKey = "GUB300"
 local link = "https://funpay.com/uk/lots/offer?id=37609264"
 
 sendKeyButton.MouseButton1Click:Connect(function()
 	if keyBox.Text == correctKey then
-		keyFrame.Visible = false -- Скрываем кей-фрейм
-		mainFrame.Visible = true -- Показываем главный фрейм
+		keyFrame.Visible = false
+		-- Добавьте здесь переход к главному GUI
+		print("Access Granted!")
 	else
 		keyBox.Text = ""
 		keyBox.PlaceholderText = "Invalid Key. Try Again!"
@@ -100,15 +102,14 @@ end)
 getKeyButton.MouseButton1Click:Connect(function()
 	-- Копирование ссылки в буфер обмена
 	setclipboard(link)
-	-- Изменение текста кнопки на "Скопировано"
 	getKeyButton.Text = "Copied!"
-	-- Таймер для возврата текста кнопки обратно на "Get Key"
 	task.wait(1.5)
 	getKeyButton.Text = "Get Key"
 end)
 
--- Начальное состояние
+-- Стартовое состояние
 keyFrame.Visible = true
+
 
 
 -- Левая панель
