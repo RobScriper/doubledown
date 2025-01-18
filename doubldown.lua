@@ -292,7 +292,7 @@ local function startAutoFarm()
 
 			if tool and nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
 				local targetHRP = nearestPlayer.Character.HumanoidRootPart
-				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 0, 2))
+				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 0, 3.5))
 				tool:Activate()
 			end
 		end
