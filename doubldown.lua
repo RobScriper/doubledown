@@ -254,13 +254,11 @@ autoFarmButton.TextSize = 16
 autoFarmButton.Visible = true
 autoFarmButton.Parent = mainFrame
 
-local autoFarmCorner = Instance.new("UICorner")
-autoFarmCorner.CornerRadius = UDim.new(0, 15)
-autoFarmCorner.Parent = autoFarmButton
-
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
+local lastTeleportedTime = 0  -- Время последнего телепорта
+local cooldownTime = 5  -- Время, через которое можно снова телепортироваться (в секундах)
 
 local function getNearestPlayer()
 	local nearestPlayer = nil
@@ -293,16 +291,25 @@ local function startAutoFarm()
 				-- Ждем 2 секунды перед телепортацией
 				wait(2)
 
+				-- Проверяем, сколько времени прошло с последнего телепорта
+				local currentTime = tick()  -- Текущее время
+				if currentTime - lastTeleportedTime < cooldownTime then
+					-- Если прошло меньше 5 секунд, пропускаем телепортацию
+					return
+				end
+
 				-- Телепортируем персонажа к ближайшему игроку
 				local targetHRP = nearestPlayer.Character.HumanoidRootPart
 				player.Character:SetPrimaryPartCFrame(targetHRP.CFrame * CFrame.new(0, 3, 3.5))
 
+				-- Обновляем время последнего телепорта
+				lastTeleportedTime = currentTime
+
 				-- Проверяем, не умер ли игрок
 				local humanoid = nearestPlayer.Character:FindFirstChild("Humanoid")
 				if humanoid and humanoid.Health <= 0 then
-					-- Игрок умер, больше не телепортируемся
-					stopAutoFarm()
-					return
+					-- Игрок умер, пропускаем телепортацию к нему на 5 секунд
+					wait(cooldownTime)
 				end
 
 				-- Можно сразу активировать инструмент
