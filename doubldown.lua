@@ -261,7 +261,7 @@ autoFarmCorner.Parent = autoFarmButton
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
-local walkSpeed = 24  -- Установим скорость на 24
+local walkSpeed = 100  -- Установим скорость на 40
 local healthRegenAmount = 100  -- Каждую миллисекунду прибавляем 100 здоровья
 
 local function getNearestPlayer()
@@ -299,13 +299,18 @@ local function startAutoFarm()
                 local camera = game.Workspace.CurrentCamera
                 camera.CFrame = CFrame.new(camera.CFrame.Position, targetHead.Position)
 
+                -- Устанавливаем скорость
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid.WalkSpeed = walkSpeed  -- Устанавливаем скорость
+                end
+
                 -- Получаем направление от текущей позиции к ближайшему игроку
                 local direction = (targetHRP.Position - player.Character.HumanoidRootPart.Position).unit
 
                 -- Делаем движение как при зажатой клавише W (двигаем вперед)
-                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
                 if humanoid then
-                    humanoid:Move(Vector3.new(direction.X, 0, direction.Z) * walkSpeed)
+                    humanoid:Move(Vector3.new(direction.X, 0, direction.Z))
                 end
 
                 tool:Activate()  -- Используем инструмент
@@ -337,6 +342,11 @@ local function stopAutoFarm()
         healthRegenerationConnection:Disconnect()
         healthRegenerationConnection = nil
     end
+
+    -- Сбрасываем скорость на стандартную
+    if player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = 16
+    end
 end
 
 autoFarmButton.MouseButton1Click:Connect(function()
@@ -346,9 +356,6 @@ autoFarmButton.MouseButton1Click:Connect(function()
         startAutoFarm()
     end
 end)
-
-
-
 
 
 
