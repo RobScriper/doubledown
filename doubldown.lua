@@ -261,7 +261,7 @@ autoFarmCorner.Parent = autoFarmButton
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
-local walkSpeed = 100  -- Установим скорость на 40
+local walkSpeed = 40  -- Установим скорость на 40
 local healthRegenAmount = 100  -- Каждую миллисекунду прибавляем 100 здоровья
 
 local function getNearestPlayer()
