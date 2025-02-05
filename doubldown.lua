@@ -261,7 +261,6 @@ autoFarmCorner.Parent = autoFarmButton
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
-local walkSpeed = 40  -- Установим скорость на 40
 local healthRegenAmount = 100  -- Каждую миллисекунду прибавляем 100 здоровья
 
 local function getNearestPlayer()
@@ -299,16 +298,17 @@ local function startAutoFarm()
                 local camera = game.Workspace.CurrentCamera
                 camera.CFrame = CFrame.new(camera.CFrame.Position, targetHead.Position)
 
-                -- Устанавливаем скорость
+                -- Устанавливаем обычную скорость
                 local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
                 if humanoid then
-                    humanoid.WalkSpeed = walkSpeed  -- Устанавливаем скорость
+                    humanoid.WalkSpeed = 16  -- Всегда стандартная скорость
                 end
 
-                -- Получаем направление от текущей позиции к ближайшему игроку
-                local direction = (targetHRP.Position - player.Character.HumanoidRootPart.Position).unit
+                -- Увеличиваем хитбокс ближайшего игрока
+                targetHRP.Size = Vector3.new(6, 8, 6)  -- Увеличен в 3-4 раза
 
-                -- Делаем движение как при зажатой клавише W (двигаем вперед)
+                -- Двигаемся к цели
+                local direction = (targetHRP.Position - player.Character.HumanoidRootPart.Position).unit
                 if humanoid then
                     humanoid:Move(Vector3.new(direction.X, 0, direction.Z))
                 end
@@ -322,7 +322,6 @@ local function startAutoFarm()
     healthRegenerationConnection = game:GetService("RunService").Heartbeat:Connect(function()
         if player.Character and player.Character:FindFirstChild("Humanoid") then
             local humanoid = player.Character.Humanoid
-            -- Прибавляем 100 хп каждую миллисекунду (каждый кадр)
             humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + healthRegenAmount * game:GetService("RunService").Heartbeat:Wait())
         end
     end)
@@ -347,6 +346,13 @@ local function stopAutoFarm()
     if player.Character and player.Character:FindFirstChild("Humanoid") then
         player.Character.Humanoid.WalkSpeed = 16
     end
+
+    -- Возвращаем размер хитбокса всем игрокам в стандартный
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            otherPlayer.Character.HumanoidRootPart.Size = Vector3.new(2, 2, 1)  -- Обычный размер
+        end
+    end
 end
 
 autoFarmButton.MouseButton1Click:Connect(function()
@@ -356,6 +362,7 @@ autoFarmButton.MouseButton1Click:Connect(function()
         startAutoFarm()
     end
 end)
+
 
 
 
