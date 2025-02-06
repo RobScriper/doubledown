@@ -261,9 +261,8 @@ autoFarmCorner.Parent = autoFarmButton
 local autoFarmActive = false
 local autoFarmConnection
 local healthRegenerationConnection
-local walkSpeed = 100  -- Установим скорость на 100
-local healthRegenAmount = 100  -- Прибавляем 100 здоровья каждую миллисекунду
-local godModeActive = false  -- Переменная для гуд мода
+local godModeActive = false
+local player = game.Players.LocalPlayer
 
 local function getNearestPlayer()
     local nearestPlayer = nil
@@ -282,20 +281,21 @@ local function getNearestPlayer()
     return nearestPlayer
 end
 
--- Функция для активации/деактивации гуд мода
 local function toggleGodMode()
     local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
     if humanoid then
-        if godModeActive then
-            -- Включаем возможность получения урона
-            humanoid.Health = humanoid.Health  -- Позволяем изменения здоровья
-            humanoid.MaxHealth = humanoid.MaxHealth  -- Восстанавливаем максимум здоровья
-            humanoid:SetAttribute("CanTakeDamage", true)  -- Включаем урон
-        else
-            -- Отключаем возможность получения урона
-            humanoid:SetAttribute("CanTakeDamage", false)  -- Отключаем урон
-            humanoid.Health = humanoid.Health  -- Не даем урону измениться
-            humanoid.MaxHealth = humanoid.MaxHealth  -- Оставляем здоровье неизменным
+        humanoid:SetAttribute("CanTakeDamage", not godModeActive)
+    end
+end
+
+local function flyUp(duration, height)
+    local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if humanoidRootPart then
+        local targetPosition = humanoidRootPart.Position + Vector3.new(0, height, 0)
+        local startTime = tick()
+        while tick() - startTime < duration do
+            humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position:Lerp(targetPosition, 0.1))
+            task.wait()
         end
     end
 end
@@ -310,64 +310,32 @@ local function startAutoFarm()
             local tool = player.Backpack:FindFirstChildOfClass("Tool") or player.Character:FindFirstChildOfClass("Tool")
             local nearestPlayer = getNearestPlayer()
 
-            -- Если у игрока есть инструмент (например, меч), включаем гуд мод
-            if tool then
+            if tool and nearestPlayer then
                 if not godModeActive then
                     godModeActive = true
-                    toggleGodMode()  -- Включаем гуд мод
+                    toggleGodMode()
                 end
-
-                -- Устанавливаем скорость
-                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid.WalkSpeed = walkSpeed  -- Устанавливаем скорость 100
+                
+                local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart then
+                    local direction = (nearestPlayer.Character.HumanoidRootPart.Position - humanoidRootPart.Position).unit
+                    humanoidRootPart.Velocity = direction * 200
+                    humanoidRootPart.CFrame = humanoidRootPart.CFrame * CFrame.Angles(0, math.rad(360 * deltaTime * 5), 0)
                 end
-
-                -- Поворачиваем камеру к ближайшему игроку
-                if nearestPlayer and nearestPlayer.Character and nearestPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                    local targetHRP = nearestPlayer.Character.HumanoidRootPart
-                    local targetHead = nearestPlayer.Character.Head
-
-                    -- Поворачиваем камеру к ближайшему игроку
-                    local camera = game.Workspace.CurrentCamera
-                    camera.CFrame = CFrame.new(camera.CFrame.Position, targetHead.Position)
-
-                    -- Вращаем игрока на 360 градусов (крутилка)
-                    local rotationSpeed = 360 * deltaTime  -- 360 градусов за секунду
-                    local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
-                    if humanoidRootPart then
-                        humanoidRootPart.CFrame = humanoidRootPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0)
-                    end
-
-                    -- Получаем направление от текущей позиции к ближайшему игроку
-                    local direction = (targetHRP.Position - player.Character.HumanoidRootPart.Position).unit
-
-                    -- Делаем движение как при зажатой клавише W (двигаем вперед)
-                    if humanoid then
-                        humanoid:Move(Vector3.new(direction.X, 0, direction.Z))
-                    end
-
-                    tool:Activate()  -- Используем инструмент
-                end
-            else
-                -- Если у игрока нет инструмента, отключаем гуд мод и скорость
-                if godModeActive then
-                    godModeActive = false
-                    toggleGodMode()  -- Выключаем гуд мод
-                end
-                if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
-                    player.Character.Humanoid.WalkSpeed = 16  -- Устанавливаем стандартную скорость
-                end
+                
+                tool:Activate()
             end
         end
     end)
 
-    -- Регистрация здоровья каждую миллисекунду (бесконечное здоровье)
-    healthRegenerationConnection = game:GetService("RunService").Heartbeat:Connect(function()
-        if player.Character and player.Character:FindFirstChild("Humanoid") then
-            local humanoid = player.Character.Humanoid
-            -- Прибавляем здоровье каждую миллисекунду (бесконечное здоровье)
-            humanoid.Health = humanoid.MaxHealth  -- Устанавливаем здоровье равным максимуму (бесконечно)
+    healthRegenerationConnection = player.Character:FindFirstChildOfClass("Humanoid").HealthChanged:Connect(function(health)
+        if health < player.Character.Humanoid.MaxHealth then
+            flyUp(2, 50)
+            task.wait(2)
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.Health = humanoid.MaxHealth
+            end
         end
     end)
 end
@@ -387,12 +355,6 @@ local function stopAutoFarm()
         healthRegenerationConnection = nil
     end
 
-    -- Сбрасываем скорость на стандартную
-    if player.Character and player.Character:FindFirstChild("Humanoid") then
-        player.Character.Humanoid.WalkSpeed = 16  -- Устанавливаем стандартную скорость
-    end
-
-    -- Включаем урон, если гуд мод был выключен
     if godModeActive then
         godModeActive = false
         toggleGodMode()
