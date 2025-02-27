@@ -381,41 +381,62 @@ creditsButton.MouseButton1Click:Connect(function()
 	creditsText.Visible = true
 end)
 
--- Полоска для выхода из приложения
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
 local exitBar = Instance.new("Frame")
-exitBar.Size = UDim2.new(0.3, 0, 0, 5)  -- Меньше и внизу
-exitBar.Position = UDim2.new(0.5, -75, 1, -10)  -- Центр, чуть ниже
-exitBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Белая полоска
+exitBar.Size = UDim2.new(0.4, 0, 0, 10) -- Видимый размер полоски
+exitBar.Position = UDim2.new(0.5, -75, 1, -15)
+exitBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 exitBar.BorderSizePixel = 0
 exitBar.Parent = mainFrame
+
+local invisibleButton = Instance.new("TextButton")
+invisibleButton.Size = UDim2.new(2, 0, 2, 0) -- Увеличенная невидимая кнопка
+invisibleButton.Position = UDim2.new(-0.5, 0, -0.5, 0) -- Центрируем вокруг полоски
+invisibleButton.BackgroundTransparency = 1
+invisibleButton.Text = ""
+invisibleButton.Parent = exitBar
 
 local exitBarCorner = Instance.new("UICorner")
 exitBarCorner.CornerRadius = UDim.new(0, 5)
 exitBarCorner.Parent = exitBar
 
--- Логика для отслеживания движения мыши
+-- Логика перетаскивания
 local isDragging = false
-local dragStart = nil
-local startPos = nil
+local dragStart, startPos = nil, nil
 
-exitBar.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		isDragging = true
-		dragStart = input.Position
-		startPos = mainFrame.Position
-	end
+invisibleButton.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        
+        -- Анимация увеличения полоски при начале перетаскивания
+        TweenService:Create(exitBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0.45, 0, 0, 15)}):Play()
+    end
 end)
 
-exitBar.InputChanged:Connect(function(input)
-	if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-		local delta = input.Position - dragStart
-		mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-	end
+invisibleButton.InputChanged:Connect(function(input)
+    if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        local newPos = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+        mainFrame.Position = newPos
+        exitBar.Position = UDim2.new(0.5, -75, 1, -15)
+    end
 end)
 
-exitBar.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		isDragging = false
-	end
+invisibleButton.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isDragging = false
+        
+        -- Анимация возврата полоски в исходное состояние
+        local tween = TweenService:Create(exitBar, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0.4, 0, 0, 10), Position = UDim2.new(0.5, -75, 1, -15)})
+        tween:Play()
+    end
 end)
+
