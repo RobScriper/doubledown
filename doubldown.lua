@@ -200,6 +200,231 @@ local creditsCorner = Instance.new("UICorner")
 creditsCorner.CornerRadius = UDim.new(0, 15)
 creditsCorner.Parent = creditsButton
 
+-- Раздел AutoDuels
+local autoDuelsButton = Instance.new("TextButton")
+autoDuelsButton.Size = UDim2.new(0.9, 0, 0, 50)
+autoDuelsButton.Position = UDim2.new(0.05, 0, 0.5, 0) -- Позиция между Sword Fight и Credits
+autoDuelsButton.Text = "AutoDuels"
+autoDuelsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+autoDuelsButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50) -- Красный цвет для кнопки
+autoDuelsButton.Font = Enum.Font.GothamBold
+autoDuelsButton.TextSize = 14
+autoDuelsButton.Parent = leftPanel
+
+local autoDuelsCorner = Instance.new("UICorner")
+autoDuelsCorner.CornerRadius = UDim.new(0, 15)
+autoDuelsCorner.Parent = autoDuelsButton
+
+-- Создаем отдельное меню для AutoDuels
+local autoDuelsFrame = Instance.new("Frame")
+autoDuelsFrame.Size = UDim2.new(0.7, 0, 0.5, 0) -- Размер раздела
+autoDuelsFrame.Position = UDim2.new(0.25, 0, 0.4, 0) -- Позиция раздела
+autoDuelsFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+autoDuelsFrame.BorderSizePixel = 0
+autoDuelsFrame.Visible = false -- Изначально скрыт
+autoDuelsFrame.Parent = mainFrame
+
+local autoDuelsFrameCorner = Instance.new("UICorner")
+autoDuelsFrameCorner.CornerRadius = UDim.new(0, 15)
+autoDuelsFrameCorner.Parent = autoDuelsFrame
+
+-- Секция для 10 Robux
+local robux10Section = Instance.new("TextLabel")
+robux10Section.Size = UDim2.new(0.9, 0, 0.1, 0)
+robux10Section.Position = UDim2.new(0.05, 0, 0.05, 0)
+robux10Section.Text = "10 Robux"
+robux10Section.TextColor3 = Color3.fromRGB(255, 255, 255)
+robux10Section.Font = Enum.Font.GothamBold
+robux10Section.TextSize = 16
+robux10Section.BackgroundTransparency = 1
+robux10Section.Parent = autoDuelsFrame
+
+-- Поле для ввода Asset ID (10 Robux)
+local asset10Input = Instance.new("TextBox")
+asset10Input.Size = UDim2.new(0.9, 0, 0.1, 0)
+asset10Input.Position = UDim2.new(0.05, 0, 0.15, 0)
+asset10Input.PlaceholderText = "Asset ID"
+asset10Input.Text = ""
+asset10Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+asset10Input.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+asset10Input.Font = Enum.Font.Gotham
+asset10Input.TextSize = 14
+asset10Input.Parent = autoDuelsFrame
+
+local asset10InputCorner = Instance.new("UICorner")
+asset10InputCorner.CornerRadius = UDim.new(0, 10)
+asset10InputCorner.Parent = asset10Input
+
+-- Поле для ввода Gamepass ID (10 Robux)
+local gamepass10Input = Instance.new("TextBox")
+gamepass10Input.Size = UDim2.new(0.9, 0, 0.1, 0)
+gamepass10Input.Position = UDim2.new(0.05, 0, 0.3, 0)
+gamepass10Input.PlaceholderText = "Gamepass ID"
+gamepass10Input.Text = ""
+gamepass10Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+gamepass10Input.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+gamepass10Input.Font = Enum.Font.Gotham
+gamepass10Input.TextSize = 14
+gamepass10Input.Parent = autoDuelsFrame
+
+local gamepass10InputCorner = Instance.new("UICorner")
+gamepass10InputCorner.CornerRadius = UDim.new(0, 10)
+gamepass10InputCorner.Parent = gamepass10Input
+
+-- Секция для 20 Robux
+local robux20Section = Instance.new("TextLabel")
+robux20Section.Size = UDim2.new(0.9, 0, 0.1, 0)
+robux20Section.Position = UDim2.new(0.05, 0, 0.45, 0)
+robux20Section.Text = "20 Robux"
+robux20Section.TextColor3 = Color3.fromRGB(255, 255, 255)
+robux20Section.Font = Enum.Font.GothamBold
+robux20Section.TextSize = 16
+robux20Section.BackgroundTransparency = 1
+robux20Section.Parent = autoDuelsFrame
+
+-- Поле для ввода Asset ID (20 Robux)
+local asset20Input = Instance.new("TextBox")
+asset20Input.Size = UDim2.new(0.9, 0, 0.1, 0)
+asset20Input.Position = UDim2.new(0.05, 0, 0.55, 0)
+asset20Input.PlaceholderText = "Asset ID"
+asset20Input.Text = ""
+asset20Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+asset20Input.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+asset20Input.Font = Enum.Font.Gotham
+asset20Input.TextSize = 14
+asset20Input.Parent = autoDuelsFrame
+
+local asset20InputCorner = Instance.new("UICorner")
+asset20InputCorner.CornerRadius = UDim.new(0, 10)
+asset20InputCorner.Parent = asset20Input
+
+-- Поле для ввода Gamepass ID (20 Robux)
+local gamepass20Input = Instance.new("TextBox")
+gamepass20Input.Size = UDim2.new(0.9, 0, 0.1, 0)
+gamepass20Input.Position = UDim2.new(0.05, 0, 0.7, 0)
+gamepass20Input.PlaceholderText = "Gamepass ID"
+gamepass20Input.Text = ""
+gamepass20Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+gamepass20Input.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+gamepass20Input.Font = Enum.Font.Gotham
+gamepass20Input.TextSize = 14
+gamepass20Input.Parent = autoDuelsFrame
+
+local gamepass20InputCorner = Instance.new("UICorner")
+gamepass20InputCorner.CornerRadius = UDim.new(0, 10)
+gamepass20InputCorner.Parent = gamepass20Input
+
+-- Логика для 10 Robux (Asset ID)
+asset10Input.FocusLost:Connect(function()
+    local assetId = asset10Input.Text
+    if assetId ~= "" then
+        while true do
+            local args = {
+                [1] = "SwordFight",
+                [2] = 10,
+                [3] = {
+                    ["assetType"] = "Asset",
+                    ["assetId"] = assetId
+                }
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteCalls"):WaitForChild("GameSpecific"):WaitForChild("Tickets"):WaitForChild("CreateRoom"):InvokeServer(unpack(args))
+            wait(1)
+        end
+    end
+end)
+
+-- Логика для 10 Robux (Gamepass ID)
+gamepass10Input.FocusLost:Connect(function()
+    local gamepassId = gamepass10Input.Text
+    if gamepassId ~= "" then
+        while true do
+            local args = {
+                [1] = "SwordFight",
+                [2] = 10,
+                [3] = {
+                    ["assetType"] = "GamePass",
+                    ["assetId"] = gamepassId
+                }
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteCalls"):WaitForChild("GameSpecific"):WaitForChild("Tickets"):WaitForChild("CreateRoom"):InvokeServer(unpack(args))
+            wait(1)
+        end
+    end
+end)
+
+-- Логика для 20 Robux (Asset ID)
+asset20Input.FocusLost:Connect(function()
+    local assetId = asset20Input.Text
+    if assetId ~= "" then
+        while true do
+            local args = {
+                [1] = "SwordFight",
+                [2] = 20,
+                [3] = {
+                    ["assetType"] = "Asset",
+                    ["assetId"] = assetId
+                }
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteCalls"):WaitForChild("GameSpecific"):WaitForChild("Tickets"):WaitForChild("CreateRoom"):InvokeServer(unpack(args))
+            wait(1)
+        end
+    end
+end)
+
+-- Логика для 20 Robux (Gamepass ID)
+gamepass20Input.FocusLost:Connect(function()
+    local gamepassId = gamepass20Input.Text
+    if gamepassId ~= "" then
+        while true do
+            local args = {
+                [1] = "SwordFight",
+                [2] = 20,
+                [3] = {
+                    ["assetType"] = "GamePass",
+                    ["assetId"] = gamepassId
+                }
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteCalls"):WaitForChild("GameSpecific"):WaitForChild("Tickets"):WaitForChild("CreateRoom"):InvokeServer(unpack(args))
+            wait(1)
+        end
+    end
+end)
+
+-- Логика переключения разделов
+autoDuelsButton.MouseButton1Click:Connect(function()
+    -- Скрываем все разделы
+    if autoFarmButton then
+        autoFarmButton.Visible = false
+    end
+    if creditsText then
+        creditsText.Visible = false
+    end
+    -- Показываем раздел AutoDuels
+    autoDuelsFrame.Visible = true
+end)
+
+swordFightButton.MouseButton1Click:Connect(function()
+    -- Показываем раздел Sword Fight
+    if autoFarmButton then
+        autoFarmButton.Visible = true
+    end
+    -- Скрываем раздел AutoDuels
+    if autoDuelsFrame then
+        autoDuelsFrame.Visible = false
+    end
+end)
+
+creditsButton.MouseButton1Click:Connect(function()
+    -- Показываем раздел Credits
+    if creditsText then
+        creditsText.Visible = true
+    end
+    -- Скрываем раздел AutoDuels
+    if autoDuelsFrame then
+        autoDuelsFrame.Visible = false
+    end
+end)
+
 -- Нижний блок с аватаром и ником
 local avatarFrame = Instance.new("Frame")
 avatarFrame.Size = UDim2.new(1, 0, 0, 100)
@@ -439,4 +664,3 @@ invisibleButton.InputEnded:Connect(function(input)
         tween:Play()
     end
 end)
-
